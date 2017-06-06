@@ -1,0 +1,7 @@
+java -cp mhap-1.6.jar edu.umd.marbl.mhap.main.KmerStatSimulator 5000 10000 0.05 0.01 0.01 ./data/test_sample.fa > data/simulated_sequences.fa
+
+java -Xmx32g -server -jar mhap-1.6.jar --min-store-length 2000 -s ./data/simulated_sequences.fa > ./data/mhap.ovls
+
+./blasr ./data/simulated_sequences.fa ./data/test_sample.fa --minReadLength 200 --nproc 32 --bestn 10 -m 4 --out data/ref.m4
+
+java -Xmx6144m -cp ../MHAP-1.6/target/mhap-1.6.jar edu.umd.marbl.mhap.main.EstimateROC data/ref.m4 data/mhap.ovls data/simulated_sequences.fa 2000 10000 true false
